@@ -1,0 +1,75 @@
+defaults:
+  - _self_
+  - augmentations: symmetric-weak-rec.yaml
+  - wandb: private.yaml
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+# disable hydra outputs
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+seed: 45
+name: "DE-supcon_cls-imbalance_0.1T-CCC"
+method: "supcondisentangle"
+backbone:
+  name: "resnet18Z"
+  weight: {
+    enable: True,
+    'root': "./trained_models/pretrain_weight_supcon/cls-imbalance_0.1T/last.ckpt" # s3j5avyl
+  }
+method_kwargs:
+  classifier:  {
+    grad_cut: True,
+    type: 'cls_mu',
+    type_C: 'cls_sigma',
+    enable: True,
+    classes: 5,
+  }
+  disentangle: {
+    enable: True,
+    z_dim: 32,
+    alpha: 0.001,
+    core: True,
+    hparams: {kl_sps: 0.005, kl_cls: 0.001, kl_dt: 0.001, dt_cls: 1.0, cls: 0.5},
+    enc_layers:  '256 256 128 128',
+    dec_layers: '32 64 64 128 256 256',
+    encp_layers: '256 128 64 32',
+    encp_kernel: '4 4 3 3',
+    decp_layers: '32 64 128 256',
+    decp_kernel: '3 3 4 4',
+  }
+data:
+  format: "dali"
+  num_workers: 4
+  drop_last: True
+  class_balance: True
+  dataset: imagenet100
+  train_path: '../dataset/dataset_pcs/clahe58/train'
+  val_path: '../dataset/dataset_pcs/clahe58/test/0.01'
+  test_path: '../dataset/dataset_pcs/clahe58/test/0.01'
+optimizer:
+  lr: 0.01
+  classifier_lr: 0.001
+  name: "sgd"
+  batch_size: 128
+  weight_decay: 1e-3
+scheduler:
+  name: "warmup_cosine"
+checkpoint:
+  enabled: True
+  dir: "trained_models"
+  frequency: 5
+  save_last_ckpt: True
+  save_top_module: True
+  monitor: 'valid_acc_avg'
+auto_resume:
+  enabled: True
+
+max_epochs: 100
+devices: [0,]
+sync_batchnorm: False
+accelerator: "gpu"
+precision: 16

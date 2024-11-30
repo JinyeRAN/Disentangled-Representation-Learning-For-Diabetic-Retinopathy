@@ -1,0 +1,61 @@
+defaults:
+  - _self_
+  - augmentations: symmetric-weak.yaml
+  - wandb: private.yaml
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+# disable hydra outputs
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+seed: 0
+name: "mocov2plus-baseline-0.01T-imagenetpretrain"
+method: "mocov2"
+backbone:
+  name: "resnet18Z" # "inception" #
+method_kwargs:
+  classifier: {'enable': True, 'classes':5}
+  proj_hiddim: 2048 # 4288 # 2048
+  proj_outdim: 256
+  queue_size: 16384
+  temperature: 0.01
+momentum:
+  base_tau: 0.99
+  final_tau: 0.999
+data:
+  dataset: imagenet100
+  train_path: '../dataset/dataset_pcs/clahe58/train'
+  val_path: '../dataset/dataset_pcs/clahe58/test/inner'
+  test_path: '../dataset/dataset_pcs/clahe58/test/inner'
+  format: "dali"
+  num_workers: 4
+  class_balance: False
+  drop_last: True
+optimizer:
+  name: "sgd"
+  batch_size: 128
+  lr: 0.3
+  classifier_lr: 0.03
+  weight_decay: 1e-4
+scheduler:
+  name: "warmup_cosine"
+checkpoint:
+  enabled: True
+  dir: "trained_models"
+  frequency: 50
+  save_last_ckpt: True
+  save_top_module: False
+  monitor: 'valid_acc_avg'
+auto_resume:
+  enabled: True
+
+# overwrite PL stuff
+max_epochs: 400
+devices: [0,]
+sync_batchnorm: False
+accelerator: "gpu"
+precision: 16
+
