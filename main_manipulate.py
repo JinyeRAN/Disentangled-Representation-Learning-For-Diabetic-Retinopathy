@@ -344,23 +344,11 @@ if __name__ == "__main__":
     # main('./trained_models/mocodisentangle/bry0ycf7', decouple=False, modal='Z_frequency') # 'Z_frequency'
 
     # 尝试
-    # main('./trained_models/mocodisentangle/96y1vbz9', decouple=False, modal='last') # bingo
+    # main('./trained_models/mocodisentangle/96y1vbz9', decouple=False, modal='last')
     # main('./trained_models/mocodisentangle/gdwg5yhj', decouple=False, modal='last')
     # main('./trained_models/mocodisentangle/z6ikdbz5', decouple=False, modal='last')
-
-    # for i in range(10):
-    # main('./trained_models/supcondisentangle/kx3uloiy', decouple=False, modal='last', seed=7) # bingo
-    # main('./trained_models/supcondisentangle/6arnvujh', decouple=False, modal='best')
-    # main('./trained_models/supcondisentangle/wo5cbth6', decouple=False, modal='best')
-
-    # # main('./trained_models/arvix/mocov2/40p4maje', decouple=True, modal='last')
-    # main('./trained_models/mocodisentangle/igf0tagp', decouple=False, modal='last')
-    # main('./trained_models/mocodisentangle/th30p02s', decouple=False, modal='last')
-    # main('./trained_models/mocodisentangle/2p5fp6tr', decouple=False, modal='last')
     main('./trained_models/arvix/supcondisentangle/upefo9pn', decouple=False, modal='last')
-    # main('./trained_models/supcondisentangle/upefo9pn', decouple=False, modal='last')
-    # main('./trained_models/supcondisentangle/4o3lsvoa', decouple=False, modal='best')
-    # main('./trained_models/supcondisentangle/4o3lsvoa', decouple=False, modal='last')
+
 
     # weight1 = torch.load('./trained_models/mocodisentangle/4so0vdm1/last.ckpt')['state_dict']
     # weight2 = torch.load('./trained_models/arvix/mocov2/40p4maje/last.ckpt')['state_dict']
